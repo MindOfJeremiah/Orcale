@@ -7,7 +7,7 @@ import os # reads values from .gitignore
 
 today = date.today()
 
-load_dotenv(dotenv_path="/home/MindOfJeremiah/Desktop/orcale/.env") #loads name from .env
+load_dotenv(dotenv_path="/home/MindOfJeremiah/Desktop/oracle/.env") #loads name from .env
 
 ALLOWED_NAME = os.getenv("ALLOWED_NAME") # ALLOWED_NAME is all caps because its a constant in python. Constants use uppercase to single this never changes
 
@@ -20,11 +20,34 @@ if name.lower() != ALLOWED_NAME.lower(): #.lower() converts any string to lowerc
 else:
     print(f"Whew, it's you {name} let's start")
 
-income = float(input("Enter recent profit: "))
+income = -1
+
+while income < 0:
+    try:
+        income = float(input("Enter recent profit: "))
+    except ValueError:
+        print("Now why wouldn't you try a NUMBER.")
+        continue 
+
+    if income < 0:
+        print("Income cannot be negative. Try again.")
+    
+
 print(f"Your current is {income}")
 
-debt = float(input("Do you have any debt? "))
-if debt > 0:
+debt = -1 #start with an invlaid option
+
+while debt < 0: #runs the same condition if invalid
+    try:
+        debt = float(input("Do you have any debt? "))
+    except ValueError:
+        print("Enter a NUMBER.")
+        continue 
+
+    if debt < 0: #if less then 0 re loop
+        print("Please enter a valid number. Try again.")
+    
+if debt > 0: #if debt print if not print
     print(f"Ouch your debt is {debt}")
 else: 
     print("Looks like you're debt free")
@@ -58,6 +81,14 @@ print(f"Balance: ${balance}")
 print(f"Goal: ${goal}")
 print(f"Remaining: ${goal - balance}") # Results
 
+#header ONLY on first run
+if not os.path.exists("history.csv"):
+    with open("history.csv", "w", newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(["date", "income", "school", "balance", "food", "bills", 
+    "other", "total_expenses", "debt", "balance", "stocks", "savings",
+    "progress"])
+        
 #Log current entry to CSV
 with open("history.csv", "a") as f:
     writer = csv.writer(f)
@@ -81,6 +112,7 @@ print (f"Progress toward Atlanta: {progress:.2f}%")
 # Read history for analysis 
 with open("history.csv", "r") as f:
     reader = csv.reader(f)
+    next(reader) #skip header row
     rows = list(reader)
 
 #prints the history of the csv row by row float converts it into a .
