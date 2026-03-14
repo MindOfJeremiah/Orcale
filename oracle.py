@@ -61,7 +61,20 @@ print(f"Remaining: ${goal - balance}") # Results
 #Log current entry to CSV
 with open("history.csv", "a") as f:
     writer = csv.writer(f)
-    writer.writerow([date.today(), income, total_expenses, debt, balance, round(progress, 2)])
+    writer.writerow([ # new column structure to print broken down
+        date.today(),
+        income,
+        expenses["school"],
+        expenses["food"],
+        expenses["bills"],
+        expenses["other"],
+        total_expenses,
+        debt,
+        balance,
+        savings["Stocks"],
+        savings["Savings"],
+        round(progress, 2)
+   ])
 
 print (f"Progress toward Atlanta: {progress:.2f}%")
 
@@ -72,8 +85,8 @@ with open("history.csv", "r") as f:
 
 #prints the history of the csv row by row float converts it into a .
 incomes = [float(row[1]) for row in rows]
-expense_history = [float(row[2]) for row in rows]
-balances = [float(row[4]) for row in rows]
+expense_history = [float(row[6]) for row in rows]
+balances = [float(row[8]) for row in rows]
 
 
 #divides the sum of incomes by income and expenses by expenses
@@ -83,7 +96,11 @@ avg_expenses = sum(expense_history) / len(expense_history) #columns that the .cs
 #biggest expense from current dictonary
 biggest = max(expenses, key=expenses.get)
 
-total_savings = sum(savings.values())
+total_savings = savings["Savings"]
+if total_savings > 0:
+    print(f"{total_savings:.2f} is growing nicely! ")
+else:
+    print("Savings is empty time to move some assets in.")
 
 trend = balances[-1] - balances[0]
 if trend > 0:
@@ -104,6 +121,6 @@ avg_monthly_balance = sum(balances) / len(balances)
 # prints the monthly avg makes sure its greater the 0 first if not
 if avg_monthly_balance > 0:
     months_to_goal = (goal - balances[-1]) / avg_monthly_balance
-    print(f"At your current rate you'll reach %{goal} in: {months_to_goal:.1f} months")
+    print(f"At your current rate you'll reach ${goal} in {months_to_goal:.1f} months")
 else: #the if not
     print(f"At your current spending level, you will not reach your ${goal}. Your income must exceed your expenses to make progress.")
