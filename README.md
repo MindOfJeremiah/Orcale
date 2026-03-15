@@ -6,9 +6,9 @@ Akudo is a personal finance tracker built in Python. It helps you log income, ex
 
 Getting Started
 **Linux/Mac**:
-bashpython3 orcale.py
+bashpython3 akudo.py
 **Windows**:
-bashpython orcale.py
+bashpython akudo.py
 Features
 
 Log income and expenses
